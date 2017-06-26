@@ -30,9 +30,11 @@ router.post('/sign-up', passport.authenticate('local-sign-up', {
 
 // have to be logged in to visit
 router.get('/profile', isLoggedIn, function(req, res) {
+  var doctor = isDoctor(req);
     res.render('profile', {
-        user : req.user, // get the user out of session and pass to template
-        navbar: true
+        user : req.user,
+        navbar: true,
+        doctor: doctor
     });
 });
 
@@ -43,15 +45,61 @@ router.get('/sign-out', function(req, res) {
 });
 
 router.get('/home', isLoggedIn, function(req, res, next) {
-  res.render('index', { navbar: true });
+  var doctor = isDoctor(req);
+  res.render('index', { 
+    user : req.user,
+    navbar: true,
+    doctor: doctor
+  });
 });
 
-router.get('/fruit', isLoggedIn, function(req, res, next) {
-  res.render('fruit', { navbar: true });
+router.get('/doctor-home', isLoggedIn, function(req, res, next) {
+  var doctor = isDoctor(req);
+  if (doctor) {
+    res.render('doctor-home', { 
+      user : req.user,
+      navbar: true,
+      doctor: doctor
+    });
+  } else {
+    res.redirect('/home');
+  }
+});
+
+router.get('/fruit-questions', isLoggedIn, function(req, res, next) {
+  var doctor = isDoctor(req);
+  res.render('fruit-questions', { 
+    navbar: true,
+    user : req.user,
+    doctor: doctor
+  });
 });
 
 router.get('/general-questions', isLoggedIn, function(req, res, next) {
-  res.render('general-questions', { navbar: true });
+  var doctor = isDoctor(req);
+  res.render('general-questions', { 
+    navbar: true,
+    user : req.user,
+    doctor: doctor
+  });
+});
+
+router.get('/math-questions', isLoggedIn, function(req, res, next) {
+  var doctor = isDoctor(req);
+  res.render('math-questions', { 
+    navbar: true,
+    user : req.user,
+    doctor: doctor
+  });
+});
+
+router.get('/memory-game', isLoggedIn, function(req, res, next) {
+  var doctor = isDoctor(req);
+  res.render('memory-game', { 
+    navbar: true,
+    user : req.user,
+    doctor: doctor
+  });
 });
 
 module.exports = router;
@@ -65,4 +113,11 @@ function isLoggedIn(req, res, next) {
 
     // if they aren't redirect them to the home page
     res.redirect('/');
+}
+
+function isDoctor(req) {
+    if (req.user.local.role === "doctor") {
+      return true;
+    }
+    return false;
 }

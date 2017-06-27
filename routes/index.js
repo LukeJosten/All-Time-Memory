@@ -102,6 +102,15 @@ router.get('/memory-game', isLoggedIn, function(req, res, next) {
   });
 });
 
+router.get('/thank-you', isLoggedIn, function(req, res, next) {
+  var doctor = isDoctor(req);
+  res.render('thank-you', { 
+    navbar: true,
+    user : req.user,
+    doctor: doctor
+  });
+});
+
 module.exports = router;
 
 // route middleware to make sure a user is logged in
